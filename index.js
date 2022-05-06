@@ -17,7 +17,8 @@ async function run() {
         await client.connect();
         const itemsCollection = client.db("carWarhouse").collection("inventoryItems");
 
-        //ITEMS API
+        // ITEMS API
+        // get items
         app.get('/items', async (req, res) => {
             const query = {};
             const cursor = itemsCollection.find(query);
@@ -25,11 +26,27 @@ async function run() {
             res.send(items);
         });
 
+        // get item by id
         app.get('/items/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const item = await itemsCollection.findOne(query);
             res.send(item);
+        });
+
+        // update item
+        app.put('/items/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedItem = req.body;
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updatedData = {
+                $set: {
+                    quantity: updatedItem.quantity
+                }
+            };
+            const result = await itemsCollection.updateOne(filter, updatedData, options);
+            res.send(result);
         });
 
     } finally {
