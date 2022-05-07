@@ -49,6 +49,13 @@ async function run() {
             res.send(result);
         });
 
+        // add item
+        app.post('/items', async (req, res) => {
+            const newItem = req.body;
+            const result = await itemsCollection.insertOne(newItem);
+            res.send(result);
+        });
+
         // delete item
         app.delete('/items/:id', async (req, res) => {
             const id = req.params.id;
