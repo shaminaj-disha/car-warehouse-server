@@ -15,7 +15,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        const itemsCollection = client.db("carWarhouse").collection("inventoryItems");
+        const itemsCollection = client.db("carWarhouse").collection("itemList");
+        const blogsCollection = client.db("carWarhouse").collection("blogs");
 
         // ITEMS API
         // get items
@@ -24,6 +25,14 @@ async function run() {
             const cursor = itemsCollection.find(query);
             const items = await cursor.toArray();
             res.send(items);
+        });
+
+        // get blogs
+        app.get('/blogs', async (req, res) => {
+            const query = {};
+            const cursor = blogsCollection.find(query);
+            const blogs = await cursor.toArray();
+            res.send(blogs);
         });
 
         // get item by id
@@ -50,7 +59,7 @@ async function run() {
         });
 
         // add item
-        app.post('/items', async (req, res) => {
+        app.post('/addedItems', async (req, res) => {
             const newItem = req.body;
             const result = await itemsCollection.insertOne(newItem);
             res.send(result);
