@@ -58,6 +58,16 @@ async function run() {
             res.send(result);
         });
 
+        // get user added item
+        app.get('/addedItems', async (req, res) => {
+            const email = req.query.email;
+            console.log(email);
+                const query = { email: email };
+                const cursor = itemsCollection.find(query);
+                const userAddedItems = await cursor.toArray();
+                res.send(userAddedItems);
+        });
+
         // add item
         app.post('/addedItems', async (req, res) => {
             const newItem = req.body;
